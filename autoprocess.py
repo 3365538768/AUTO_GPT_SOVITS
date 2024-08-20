@@ -910,7 +910,7 @@ def check_for_exists(file_list=[], is_train=False):
 
 def get_name(string):
     return string.split('/')[-1]
-def autorun(train_file_name, train, gpu, reference, text, text_language, prompt_text, prompt_language):
+def autorun(train_file_name, train, gpu, reference, text, text_language, prompt_text, prompt_language,show):
     reference_name = get_name(reference)
     slice_inp_path = "resources/train/" + train_file_name
     slice_opt_root = "resources/slice/" + train_file_name
@@ -922,24 +922,27 @@ def autorun(train_file_name, train, gpu, reference, text, text_language, prompt_
     _max = 0.9
     alpha = 0.25
     n_process = 4
-    print(f"Step1：切割音频\n"
-          f"参数：\n"
-          f"slice_inp_path:{slice_inp_path}\n"
-          f"slice_opt_root:{slice_opt_root}\n"
-          f"threshold:{threshold}\n"
-          f"min_length:{min_length}\n"
-          f"min_interval:{min_interval}\n"
-          f"hop_size:{hop_size}\n"
-          f"max_sil_kept:{max_sil_kept}\n"
-          f"_max:{_max}\n"
-          f"alpha:{alpha}\n"
-          f"n_process:{n_process}")
+    if show:
+        print(f"Step1：切割音频\n"
+              f"参数：\n"
+              f"slice_inp_path:{slice_inp_path}\n"
+              f"slice_opt_root:{slice_opt_root}\n"
+              f"threshold:{threshold}\n"
+              f"min_length:{min_length}\n"
+              f"min_interval:{min_interval}\n"
+              f"hop_size:{hop_size}\n"
+              f"max_sil_kept:{max_sil_kept}\n"
+              f"_max:{_max}\n"
+              f"alpha:{alpha}\n"
+              f"n_process:{n_process}")
     if train == True:
         slice_generator = open_slice(slice_inp_path, slice_opt_root, threshold, min_length, min_interval, hop_size,
                                      max_sil_kept, _max, alpha, n_process)
         for message, visible_update_1, visible_update_2 ,visible_update_3,visible_update_4,visible_update_5in in slice_generator:
-            print(message)
-    print("Step1：切割音频结束")
+            if show:
+                print(message)
+    if show:
+        print("Step1：切割音频结束")
 
 
     asr_inp_dir = "resources/slice/" + train_file_name
@@ -948,20 +951,23 @@ def autorun(train_file_name, train, gpu, reference, text, text_language, prompt_
     asr_size = "large"
     asr_lang = "zh"
     asr_precision = "float32"
-    print(f"Step2：asr转换音频\n"
-          f"参数 :\n"
-          f"asr_inp_dir={asr_inp_dir}\n"
-          f"asr_opt_dir={asr_opt_dir}\n"
-          f"asr_model={asr_model}\n"
-          f"asr_size={asr_size}\n"
-          f"asr_lang={asr_lang}\n"
-          f"asr_precision={asr_precision}")
+    if show:
+        print(f"Step2：asr转换音频\n"
+              f"参数 :\n"
+              f"asr_inp_dir={asr_inp_dir}\n"
+              f"asr_opt_dir={asr_opt_dir}\n"
+              f"asr_model={asr_model}\n"
+              f"asr_size={asr_size}\n"
+              f"asr_lang={asr_lang}\n"
+              f"asr_precision={asr_precision}")
 
     if train == True:
         asr_generator = open_asr(asr_inp_dir, asr_opt_dir, asr_model, asr_size, asr_lang,asr_precision)
         for message, visible_update_1, visible_update_2 ,visible_update_3,visible_update_4,visible_update_5 in asr_generator:
-            print(message)
-    print("Step2:asr转换音频结束")
+            if show:
+                print(message)
+    if show:
+        print("Step2:asr转换音频结束")
 
     inp_text = "resources/asr/" + train_file_name + "/" + train_file_name + ".list"
     inp_wav_dir = "resources/slice/" + train_file_name
@@ -972,23 +978,26 @@ def autorun(train_file_name, train, gpu, reference, text, text_language, prompt_
     bert_pretrained_dir = "GPT_SoVITS/pretrained_models/chinese-roberta-wwm-ext-large"
     cnhubert_base_dir = "GPT_SoVITS/pretrained_models/chinese-hubert-base"
     pretrained_s2G = "GPT_SoVITS/pretrained_models/gsv-v2final-pretrained/s2G2333k.pth"
-    print("Step3:数据预处理一件三连开始\n")
-    print("参数：\n")
-    print(f"inp_text:{inp_text}")
-    print(f"inp_wav_dir:{inp_wav_dir}")
-    print(f"exp_name:{exp_name}")
-    print(f"gpu_numbers1a:{gpu_numbers1a}")
-    print(f"gpu_numbers1Ba:{gpu_numbers1Ba}")
-    print(f"gpu_numbers1c:{gpu_numbers1c}")
-    print(f"bert_pretrained_dir:{bert_pretrained_dir}")
-    print(f"cnhubert_base_dir:{cnhubert_base_dir}")
-    print(f"pretrained_s2G:{pretrained_s2G}")
+    if show:
+        print("Step3:数据预处理一件三连开始\n")
+        print("参数：\n")
+        print(f"inp_text:{inp_text}")
+        print(f"inp_wav_dir:{inp_wav_dir}")
+        print(f"exp_name:{exp_name}")
+        print(f"gpu_numbers1a:{gpu_numbers1a}")
+        print(f"gpu_numbers1Ba:{gpu_numbers1Ba}")
+        print(f"gpu_numbers1c:{gpu_numbers1c}")
+        print(f"bert_pretrained_dir:{bert_pretrained_dir}")
+        print(f"cnhubert_base_dir:{cnhubert_base_dir}")
+        print(f"pretrained_s2G:{pretrained_s2G}")
     if train == True:
         open1abc_generator = open1abc(inp_text, inp_wav_dir, exp_name, gpu_numbers1a, gpu_numbers1Ba, gpu_numbers1c,
                                       bert_pretrained_dir, cnhubert_base_dir, pretrained_s2G)
         for message, visible_update_1, visible_update_2 in open1abc_generator:
-            print(message)
-    print("Step3:数据预处理一件三连结束\n")
+            if show:
+                print(message)
+    if show:
+        print("Step3:数据预处理一件三连结束\n")
 
     batch_size = 4
     total_epoch = 8
@@ -1000,24 +1009,27 @@ def autorun(train_file_name, train, gpu, reference, text, text_language, prompt_
     gpu_numbers1Ba = gpu
     pretrained_s2G = "GPT_SoVITS/pretrained_models/gsv-v2final-pretrained/s2G2333k.pth"
     pretrained_s2D = "GPT_SoVITS/pretrained_models/gsv-v2final-pretrained/s2D2333k.pth"
-    print("Ste4：Sovits训练\n参数:\n")
-    print(f"batch_size:{batch_size}\n"
-          f"total_epoch:{total_epoch}\n"
-          f"exp_name:{exp_name}\n"
-          f"text_low_lr_rate:{text_low_lr_rate}\n"
-          f"if_save_latest:{if_save_latest}\n"
-          f"if_save_every_weights:{if_save_every_weights}\n"
-          f"save_every_epoch:{save_every_epoch}\n"
-          f"gpu_numbers1Ba:{gpu_numbers1Ba}\n"
-          f"pretrained_s2G:{pretrained_s2G}\n"
-          f"pretrained_s2D:{pretrained_s2D}")
+    if show:
+        print("Ste4：Sovits训练\n参数:\n")
+        print(f"batch_size:{batch_size}\n"
+              f"total_epoch:{total_epoch}\n"
+              f"exp_name:{exp_name}\n"
+              f"text_low_lr_rate:{text_low_lr_rate}\n"
+              f"if_save_latest:{if_save_latest}\n"
+              f"if_save_every_weights:{if_save_every_weights}\n"
+              f"save_every_epoch:{save_every_epoch}\n"
+              f"gpu_numbers1Ba:{gpu_numbers1Ba}\n"
+              f"pretrained_s2G:{pretrained_s2G}\n"
+              f"pretrained_s2D:{pretrained_s2D}")
     if train == True:
         open1Ba_generator = open1Ba(batch_size, total_epoch, exp_name, text_low_lr_rate, if_save_latest,
                                     if_save_every_weights, save_every_epoch, gpu_numbers1Ba, pretrained_s2G,
                                     pretrained_s2D)
         for message, visible_update_1, visible_update_2 in open1Ba_generator:
-            print(message)
-    print("Step4:Sovits训练结束\n")
+            if show:
+                print(message)
+    if show:
+        print("Step4:Sovits训练结束\n")
 
     batch_size1Bb = 4
     total_epoch1Bb = 15
@@ -1028,41 +1040,46 @@ def autorun(train_file_name, train, gpu, reference, text, text_language, prompt_
     save_every_epoch1Bb = 5
     gpu_numbers1Bb = gpu
     pretrained_s1 = "GPT_SoVITS/pretrained_models/gsv-v2final-pretrained/s1bert25hz-5kh-longer-epoch=12-step=369668.ckpt"
-    print("Ste5：GPT训练\n参数:\n")
-    print(f"batch_size1Bb:{batch_size1Bb}\n"
-          f"total_epoch1Bb:{total_epoch1Bb}\n"
-          f"exp_name:{exp_name}\n"
-          f"if_dpo:{if_dpo}\n"
-          f"if_save_latest1Bb:{if_save_latest1Bb}\n"
-          f"if_save_every_weights1Bb:{if_save_every_weights1Bb}\n"
-          f"save_every_epoch1Bb:{save_every_epoch1Bb}\n"
-          f"gpu_numbers1Bb:{gpu_numbers1Bb}\n"
-          f"pretrained_s1:{pretrained_s1}")
+    if show:
+        print("Ste5：GPT训练\n参数:\n")
+        print(f"batch_size1Bb:{batch_size1Bb}\n"
+              f"total_epoch1Bb:{total_epoch1Bb}\n"
+              f"exp_name:{exp_name}\n"
+              f"if_dpo:{if_dpo}\n"
+              f"if_save_latest1Bb:{if_save_latest1Bb}\n"
+              f"if_save_every_weights1Bb:{if_save_every_weights1Bb}\n"
+              f"save_every_epoch1Bb:{save_every_epoch1Bb}\n"
+              f"gpu_numbers1Bb:{gpu_numbers1Bb}\n"
+              f"pretrained_s1:{pretrained_s1}")
     if train == True:
         open1Bb_generator = open1Bb(batch_size1Bb, total_epoch1Bb, exp_name, if_dpo, if_save_latest1Bb,
                                     if_save_every_weights1Bb, save_every_epoch1Bb, gpu_numbers1Bb, pretrained_s1)
         for message, visible_update_1, visible_update_2 in open1Bb_generator:
-            print(message)
-    print("Step5:GPT训练结束\n")
-
-    print("Step6:打开推理\n参数:\n")
+            if show:
+                print(message)
+    if show:
+        print("Step5:GPT训练结束\n")
+        print("Step6:打开推理\n参数:\n")
     GPT_dropdown = exp_name + "-e15.ckpt"
     gpu_number_1C = gpu
     SoVITS_dropdown = exp_name + "_e8_s96.pth"
     if_tts = True
     bert_pretrained_dir = "GPT_SoVITS/pretrained_models/chinese-roberta-wwm-ext-large"
-    print("打开推理参数：")
-    print(f"GPT_dropdown={GPT_dropdown}\n"
-          f"SoVITS_dropdown={SoVITS_dropdown}\n"
-          f"bert_pretrained_dir={bert_pretrained_dir}\n"
-          f"gpu_number_1C={gpu_number_1C}\n"
-          )
+    if show:
+        print("打开推理参数：")
+        print(f"GPT_dropdown={GPT_dropdown}\n"
+              f"SoVITS_dropdown={SoVITS_dropdown}\n"
+              f"bert_pretrained_dir={bert_pretrained_dir}\n"
+              f"gpu_number_1C={gpu_number_1C}\n"
+              )
 
     change_tts_inference_generator = change_tts_inference(if_tts, bert_pretrained_dir, cnhubert_base_dir, gpu_number_1C,
                                                            GPT_dropdown, SoVITS_dropdown)
     for message in change_tts_inference_generator:
-        print(message)
-    print("Step6:打开推理结束")
+        if show:
+            print(message)
+    if show:
+        print("Step6:打开推理结束")
 
 # train_file_name="shoulinrui.m4a"
 # train=True
@@ -1773,13 +1790,16 @@ def html_left(text, label='p'):
                 </div>"""
 
 
-def autorun2(train_file_name,train,gpu,reference,text,text_language,prompt_text,prompt_language):
+def autorun2(train_file_name,train,gpu,reference,text,text_language,prompt_text,prompt_language,gpt_path,sovits_path,show):
+    if not show:
+        logging.basicConfig(level=logging.CRITICAL)
     exp_name = "exp_" + train_file_name
     reference_name = get_name(reference)
     cnhubert_base_dir = "GPT_SoVITS/pretrained_models/chinese-hubert-base"
-    gpt_path = "GPT_weights_v2/"+exp_name + "-e15.ckpt"
-    sovits_path = 'SoVITS_weights_v2/' +exp_name+'_e8_s96.pth'
-    print("推理参数:")
+    gpt_path = gpt_path
+    sovits_path = sovits_path
+    if show:
+        print("推理参数:")
     inp_ref = reference
     how_to_cut = i18n("凑四句一切")
     top_k = 5
@@ -1814,19 +1834,20 @@ def autorun2(train_file_name,train,gpu,reference,text,text_language,prompt_text,
     # for c.wav>
     # }
     # ]
-    print(f"inp_ref={inp_ref}\n"
-          f"prompt_text={prompt_text}\n"
-          f"prompt_language={prompt_language}\n"
-          f"text={text}\n"
-          f"text_language={text_language}\n"
-          f"how_to_cut={how_to_cut}\n"
-          f"top_k={top_k}\n"
-          f"top_p={top_p}\n"
-          f"temperature={temperature}\n"
-          f"ref_text_free={ref_text_free}\n"
-          f"speed={speed}\n"
-          f"if_freeze={if_freeze}\n"
-          f"inp_refs={inp_refs}\n")
+    if show:
+        print(f"inp_ref={inp_ref}\n"
+              f"prompt_text={prompt_text}\n"
+              f"prompt_language={prompt_language}\n"
+              f"text={text}\n"
+              f"text_language={text_language}\n"
+              f"how_to_cut={how_to_cut}\n"
+              f"top_k={top_k}\n"
+              f"top_p={top_p}\n"
+              f"temperature={temperature}\n"
+              f"ref_text_free={ref_text_free}\n"
+              f"speed={speed}\n"
+              f"if_freeze={if_freeze}\n"
+              f"inp_refs={inp_refs}\n")
 
     change_sovits_weights(sovits_path)
     change_gpt_weights(gpt_path)
@@ -1835,19 +1856,25 @@ def autorun2(train_file_name,train,gpu,reference,text,text_language,prompt_text,
                                         top_p, temperature, ref_text_free, speed, if_freeze,inp_refs)
     for audio in get_tts_wav_generator:
         output = audio
-
-    print(f"output={output}")
+    if show:
+        print(f"output={output}")
     from scipy.io.wavfile import write
 
     sample_rate, audio_data = output
 
     audio_data = np.array(audio_data)
-    print(f"sample_rate,audio_data={sample_rate},{audio_data}")
+    if show:
+        print(f"sample_rate,audio_data={sample_rate},{audio_data}")
     output_directory = os.path.join("output", exp_name, reference_name)
     output_filename = output_directory + f"/{text[:10]}"+".wav"
     os.makedirs(output_directory, exist_ok=True)
     write(output_filename, sample_rate, audio_data)
-    print("输出完成")
+    txt_output_directory = os.path.join(output_directory,f"{text[:10]}.txt")
+    with open(txt_output_directory,"w", encoding="utf-8") as file:
+        # 写入文本内容
+        file.write(f"{text}")
+    if show:
+        print("输出完成")
 
 # train_file_name="shoulinrui.m4a"
 # train=True
