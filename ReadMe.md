@@ -114,3 +114,34 @@ asr保存切割后的训练数据识别得到的文字list
 **推理文件夹**下是以{生成语音对应文本}为名称的推理音频
 
 ![image-20240820135236809](ReadMe.assets/image-20240820135236809.png)
+
+# 更新
+
+8.20 15：05
+
+```python
+def slice_auto(folder_path,texts):
+    for filename in os.listdir(folder_path):
+        file_path=os.path.join(folder_path,filename)
+        if filename.endswith(".wav"):
+            y,sr=librosa.load(file_path,sr=None)
+            duration=librosa.get_duration(y,sr)
+            if(duration>3.0 and duration<10.0):
+                for text in texts:
+                    print(f"{filename}——————3.0<{duration}<10.0——————满足时长")
+                    prompt_text=find_text(filename,"resources/asr/shoulinrui.m4a/shoulinrui.m4a.list")
+                    print(f"对应参考文本——————{text}")
+                    auto_v1(train_file_name, False, gpu, file_path, text, text_language, prompt_text, prompt_language, gpt_path,
+                            sovits_path,show)
+                    print("输出成功")
+            else:
+                print(f"{filename}——————{duration}不满足")
+```
+
+对produce.py添加slice_auto函数，用于自动寻找切片文件夹内满足时间要求的音频，并将其作为参考音频，同时从list表格中抽取出对应的本文，作为prompt_text。
+
+对autoprocess.py添加可以输出文本内容的功能
+
+添加show参数，当False时，不输出autoprocess中的具体参数
+
+![image-20240820150703119](ReadMe.assets/image-20240820150703119.png)

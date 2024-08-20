@@ -38,18 +38,21 @@ texts=["这段语音是通过服务器上的自动生成函数获得的语音，
        "各位观众朋友，大家晚上好。我们刚刚收到一条令人震惊的消息！今天下午三点，在市中心发生了一起严重的交通事故！”播音员的声音中透着紧张和急促，“一辆失控的卡车突然冲上了人行道，撞击了多名正在路边等待过马路的行人！现场一片混乱，令人触目惊心。",
        "播音员稍稍停顿，继续报道，“据目击者称，事故发生时，卡车司机似乎失去了对车辆的控制。我们得知，伤者中包括几名年幼的孩子，他们的伤情目前非常严重。”",]
 folder_path="resources/slice/shoulinrui.m4a/"  #参考音频的文件夹，会对其进行遍历，判断是否满足3~10s
-for filename in os.listdir(folder_path):
-    file_path=os.path.join(folder_path,filename)
-    if filename.endswith(".wav"):
-        y,sr=librosa.load(file_path,sr=None)
-        duration=librosa.get_duration(y,sr)
-        if(duration>3.0 and duration<10.0):
-            for text in texts:
-                print(f"{filename}——————3.0<{duration}<10.0——————满足时长")
-                prompt_text=find_text(filename,"resources/asr/shoulinrui.m4a/shoulinrui.m4a.list")
-                print(f"对应参考文本——————{text}")
-                auto_v1(train_file_name, False, gpu, file_path, text, text_language, prompt_text, prompt_language, gpt_path,
-                        sovits_path,show)
-                print("输出成功")
-        else:
-            print(f"{filename}——————{duration}不满足")
+def slice_auto(folder_path,texts):
+    for filename in os.listdir(folder_path):
+        file_path=os.path.join(folder_path,filename)
+        if filename.endswith(".wav"):
+            y,sr=librosa.load(file_path,sr=None)
+            duration=librosa.get_duration(y,sr)
+            if(duration>3.0 and duration<10.0):
+                for text in texts:
+                    print(f"{filename}——————3.0<{duration}<10.0——————满足时长")
+                    prompt_text=find_text(filename,"resources/asr/shoulinrui.m4a/shoulinrui.m4a.list")
+                    print(f"对应参考文本——————{text}")
+                    auto_v1(train_file_name, False, gpu, file_path, text, text_language, prompt_text, prompt_language, gpt_path,
+                            sovits_path,show)
+                    print("输出成功")
+            else:
+                print(f"{filename}——————{duration}不满足")
+
+slice_auto(folder_path,texts)
