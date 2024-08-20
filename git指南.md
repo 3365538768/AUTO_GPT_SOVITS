@@ -28,7 +28,7 @@ $ git commit -m "wrote a readme file"  #提交，并且添加注释
 # 版本管理
 
 ```
-$ git status  #查看当前版本状态
+$ git status  #查看当前版本状态（add状态）
 ```
 
 ```
@@ -38,7 +38,7 @@ $ git diff readme.txt   #查看文件被修改了什么
 # 版本回退
 
 ```
-$ git log  #查看历史修改
+$ git log  #查看历史修改（commit状态）
 ```
 
 ```
