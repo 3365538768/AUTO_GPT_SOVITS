@@ -2,21 +2,21 @@
 
 #### 1.将autoprocess.py和produce.py放在与webui.py一个层级
 
-![img](https://lgh35wom9y.feishu.cn/space/api/box/stream/download/asynccode/?code=OGY4ZWY5Nzc5NTllMjgxODgwODRiZmE4YWE4ZTQ1M2JfaHBzcVRCZVQ0aEZFTml6SW5sRlRnOUlnR05BVDFxQlBfVG9rZW46SGhaSWJSbmFDb2FWOUx4bTR5UmNQVUNYblBkXzE3MjQxMzI0NjM6MTcyNDEzNjA2M19WNA)
+![image-20240820151105003](ReadMe.assets/image-20240820151105003.png)
 
 #### 2.在该层级创建一个文件夹resources，并在resources里面再创建一个文件夹train，把训练模型的音频放在train文件夹里
 
-![img](https://lgh35wom9y.feishu.cn/space/api/box/stream/download/asynccode/?code=NjU2MGFhNzk2NTc1MTE4OTkyNGViYjdjNDgxYjAxZTVfTGhMR0Z1dEVEMENDYXl5TGQxbk5kUnRxeDQxZjR5d25fVG9rZW46RURSdGJHWXF2bzRXTUF4bnE2RWNhc25TbnNkXzE3MjQxMzI0NzQ6MTcyNDEzNjA3NF9WNA)
+![image-20240820151113718](ReadMe.assets/image-20240820151113718.png)
 
 #### 3.在train文件夹里再创建一个reference文件夹，把推理的参考音频放在这里，可以使用其他路径，只是为了方便管理
 
-![img](https://lgh35wom9y.feishu.cn/space/api/box/stream/download/asynccode/?code=N2Q3YmZiMjczOTQ0N2EzYjY5MzY3M2Y2MjFjNWU2YTBfRDFkVHVnUEt0U0RvdDRkMjhKQzdNajhDUEdSS2hwTnpfVG9rZW46V3hESmJ6ZlFRb2xSOWJ4ejNtY2NJUmtibndlXzE3MjQxMzI1MDA6MTcyNDEzNjEwMF9WNA)
+![image-20240820151122681](ReadMe.assets/image-20240820151122681.png)
 
 #### 4.查看是否已经下载了需要的模型（这里默认是使用达摩asr）
 
-![img](https://lgh35wom9y.feishu.cn/space/api/box/stream/download/asynccode/?code=MTc4ZDk3NDdkM2YyM2U2Y2YwNTRkYTNlODZiMzRlNmFfVXM0Wnd0Um04VXFMODFYOXZnWlV4NTlma25zRzFrVjhfVG9rZW46TmwzdWJ2bHlab3NlMnl4NFlEb2NCbFlhbnVmXzE3MjQxMzI1Mzg6MTcyNDEzNjEzOF9WNA)
+#### 								![image-20240820151149808](ReadMe.assets/image-20240820151149808.png)
 
-
+![image-20240820151135880](ReadMe.assets/image-20240820151135880.png)
 
 # 引用示例：
 
