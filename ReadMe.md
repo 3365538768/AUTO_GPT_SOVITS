@@ -117,7 +117,7 @@ asr保存切割后的训练数据识别得到的文字list
 
 # 更新
 
-8.20 15：05
+#### 8.20 15：05
 
 ```python
 def slice_auto(folder_path,texts):
@@ -145,3 +145,42 @@ def slice_auto(folder_path,texts):
 添加show参数，当False时，不输出autoprocess中的具体参数
 
 ![image-20240820150703119](ReadMe.assets/image-20240820150703119.png)
+
+#### 8.21 9：36
+
+autoprocess加入了自动把reference放入音频文件夹内
+
+```python
+    source_file=inp_ref
+    reference_output_directory = os.path.join(output_directory, f"{reference_name}")
+    copy_file=os.path.join(output_directory, f"{reference_name}.wav")
+    if not os.path.exists(copy_file):
+        shutil.copy(source_file, reference_output_directory)
+    if show:
+        print("输出完成")
+```
+
+produce加入了自动获得音频文本
+
+```python
+def slice_auto(texts,train,folder_path,train_file_name,gpu,text_language,prompt_language,gpt_path,sovits_path,show):
+    if train:
+        autorun(train_file_name, True, gpu, "", "", text_language, "", prompt_language, show)
+    for filename in os.listdir(folder_path):
+        file_path=os.path.join(folder_path,filename)
+        if filename.endswith(".wav"):
+            y,sr=librosa.load(file_path,sr=None)
+            duration=librosa.get_duration(y,sr)
+            if(duration>3.0 and duration<10.0):
+                for text in texts:
+                    print(f"{filename}——————3.0<{duration}<10.0——————满足时长")
+                    prompt_text=find_text(filename,"resources/asr/shoulinrui.m4a/shoulinrui.m4a.list")
+                    print(f"对应参考文本——————{text}")
+                    auto_v1(train_file_name, False, gpu, file_path, text, text_language, prompt_text, prompt_language, gpt_path,
+                            sovits_path,show)
+                    print("输出成功")
+            else:
+                print(f"{filename}——————{duration}不满足")
+```
+
+![image-20240821093753355](ReadMe.assets/image-20240821093753355.png)
