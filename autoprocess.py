@@ -534,7 +534,7 @@ ps1a = []
 
 def open1a(inp_text, inp_wav_dir, exp_name, gpu_numbers, bert_pretrained_dir):
     global ps1a
-    inp_text = my_utils.clean_path(inp_text)
+    inp_text = my_utils.clean_path(inp_text) #用于路径中分隔符问题
     inp_wav_dir = my_utils.clean_path(inp_wav_dir)
     check_for_exists([inp_text, inp_wav_dir])
     if (ps1a == []):
@@ -560,7 +560,7 @@ def open1a(inp_text, inp_wav_dir, exp_name, gpu_numbers, bert_pretrained_dir):
             os.environ.update(config)
             cmd = '"%s" GPT_SoVITS/prepare_datasets/1-get-text.py' % python_exec
             print(cmd)
-            p = Popen(cmd, shell=True)
+            p = Popen(cmd, shell=True)#Popen(cmd, shell=True) 执行 cmd 所表示的命令。
             ps1a.append(p)
         yield "文本进程执行中", {"__type__": "update", "visible": False}, {"__type__": "update", "visible": True}
         for p in ps1a:
@@ -731,7 +731,7 @@ def open1abc(inp_text, inp_wav_dir, exp_name, gpu_numbers1a, gpu_numbers1Ba, gpu
             path_text = "%s/2-name2text.txt" % opt_dir
             if (os.path.exists(path_text) == False or (os.path.exists(path_text) == True and len(
                     open(path_text, "r", encoding="utf8").read().strip("\n").split("\n")) < 2)):
-                config = {
+                config = {  #全局变量，后面直接拿来用
                     "inp_text": inp_text,
                     "inp_wav_dir": inp_wav_dir,
                     "exp_name": exp_name,
@@ -740,7 +740,7 @@ def open1abc(inp_text, inp_wav_dir, exp_name, gpu_numbers1a, gpu_numbers1Ba, gpu
                     "is_half": str(is_half)
                 }
                 gpu_names = gpu_numbers1a.split("-")
-                all_parts = len(gpu_names)
+                all_parts = len(gpu_names)  #分配gpu
                 for i_part in range(all_parts):
                     config.update(
                         {
@@ -878,7 +878,7 @@ def switch_version(version_):
         '__type__': 'update', 'value': pretrained_sovits_name[-int(version[-1]) + 2]}
 
 
-def check_for_exists(file_list=[], is_train=False):
+def check_for_exists(file_list=[], is_train=False): #提示2、3、4、5、6中哪些有缺失
     _ = []
     if is_train == True and file_list:
         file_list.append(os.path.join(file_list[0], '2-name2text.txt'))
@@ -891,22 +891,22 @@ def check_for_exists(file_list=[], is_train=False):
             pass
         else:
             _.append(file)
-    # if _:
-    #     if is_train:
-    #         for i in _:
-    #             if i != '':
-    #                 gr.Warning(i)
-    #         gr.Warning(i18n('以下文件或文件夹不存在:'))
-    #     else:
-    #         if len(_) == 1:
-    #             if _[0]:
-    #                 gr.Warning(i)
-    #             gr.Warning(i18n('文件或文件夹不存在:'))
-    #         else:
-    #             for i in _:
-    #                 if i != '':
-    #                     gr.Warning(i)
-    #             gr.Warning(i18n('以下文件或文件夹不存在:'))
+    if _:
+        if is_train:
+            for i in _:
+                if i != '':
+                    gr.Warning(i)
+            gr.Warning(i18n('以下文件或文件夹不存在:'))
+        else:
+            if len(_) == 1:
+                if _[0]:
+                    gr.Warning(i)
+                gr.Warning(i18n('文件或文件夹不存在:'))
+            else:
+                for i in _:
+                    if i != '':
+                        gr.Warning(i)
+                gr.Warning(i18n('以下文件或文件夹不存在:'))
 
 def get_name(string):
     return string.split('/')[-1]
@@ -1594,7 +1594,7 @@ def get_tts_wav(ref_wav_path, prompt_text, prompt_language, text, text_language,
         else:
             with torch.no_grad():
                 pred_semantic, idx = t2s_model.model.infer_panel(
-                    all_phoneme_ids,
+                    all_phoneme_ids, #这里为什么直接连起来导进去？
                     all_phoneme_len,
                     None if ref_free else prompt,
                     bert,
@@ -1873,6 +1873,11 @@ def autorun2(train_file_name,train,gpu,reference,text,text_language,prompt_text,
     with open(txt_output_directory,"w", encoding="utf-8") as file:
         # 写入文本内容
         file.write(f"{text}")
+    source_file=inp_ref
+    reference_output_directory = os.path.join(output_directory, f"{reference_name}")
+    copy_file=os.path.join(output_directory, f"{reference_name}.wav")
+    if not os.path.exists(copy_file):
+        shutil.copy(source_file, reference_output_directory)
     if show:
         print("输出完成")
 
